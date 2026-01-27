@@ -1,0 +1,49 @@
+version: '3.8'
+
+# Development configuration with hot-reload
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: animal_blog_db_dev
+    environment:
+      POSTGRES_USER: ${DB_USER:-user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-animal_blog}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+  backend:
+    build: .
+    container_name: animal_blog_backend_dev
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    environment:
+      - PORT=3000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-user}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - DB_NAME=${DB_NAME:-animal_blog}
+      - JWT_SECRET=${JWT_SECRET:-supersecretkey}
+      - NODE_ENV=development
+    depends_on:
+      - db
+    volumes:
+      # Mount source code for hot-reload
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - backend-network
+
+volumes:
+  pgdata_dev:
+
+
+networks:
+  backend-network:
+    driver: bridge
