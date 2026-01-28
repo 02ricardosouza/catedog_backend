@@ -23,7 +23,7 @@ services:
       start_period: 10s
 
   backend:
-    build: .
+    image: blog_tcc_backend:latest
     container_name: animal_blog_backend
     ports:
       - "${BACKEND_PORT:-3000}:3000"
