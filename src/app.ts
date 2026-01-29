@@ -34,7 +34,7 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.send('ANIMAL Blog Shared API is running');
+    res.send('Cat & Dog Blog Shared API is running');
 });
 
 app.listen(PORT, () => {
