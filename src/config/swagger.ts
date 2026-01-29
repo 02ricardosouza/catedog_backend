@@ -35,6 +35,10 @@ Faça login em \`/auth/login\` para obter o token.
             {
                 url: 'http://localhost:3000',
                 description: 'Servidor de Desenvolvimento'
+            },
+            {
+                url: 'http://195.200.6.56:3000',
+                description: 'Servidor de Produção (VPS)'
             }
         ],
         components: {
@@ -53,7 +57,7 @@ Faça login em \`/auth/login\` para obter o token.
                         id: { type: 'integer', example: 1 },
                         name: { type: 'string', example: 'João Silva' },
                         email: { type: 'string', format: 'email', example: 'joao@email.com' },
-                        role: { type: 'string', enum: ['user', 'editor', 'admin'], example: 'user' },
+                        role: { type: 'string', enum: ['reader', 'author', 'moderator', 'admin'], example: 'reader' },
                         created_at: { type: 'string', format: 'date-time' }
                     }
                 },
@@ -74,14 +78,19 @@ Faça login em \`/auth/login\` para obter o token.
                         tags: {
                             type: 'array',
                             items: {
-                                type: 'object',
-                                properties: {
-                                    name: { type: 'string', example: 'saude' },
-                                    color: { type: 'string', example: '#3b82f6' }
-                                }
+                                $ref: '#/components/schemas/Tag'
                             }
                         },
                         created_at: { type: 'string', format: 'date-time' }
+                    }
+                },
+                Tag: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'integer', example: 1 },
+                        name: { type: 'string', example: 'saude' },
+                        color: { type: 'string', example: '#3b82f6' },
+                        post_count: { type: 'integer', example: 15 }
                     }
                 },
                 Comment: {
@@ -149,10 +158,13 @@ Faça login em \`/auth/login\` para obter o token.
             { name: 'Posts', description: 'CRUD de postagens' },
             { name: 'Interações', description: 'Curtidas, comentários e follows' },
             { name: 'Tags', description: 'Sistema de tags' },
-            { name: 'Administração', description: 'Endpoints administrativos (requer role admin)' }
+            { name: 'Usuários', description: 'Perfis públicos e dados de usuários' },
+            { name: 'Admin', description: 'Endpoints administrativos (requer role admin)' },
+            { name: 'Administração', description: 'Moderação de posts (requer role admin)' }
         ]
     },
     apis: ['./src/routes/*.ts']
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
+
